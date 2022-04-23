@@ -97,7 +97,8 @@ void Enc(u16 pt[], u16 ct[], u16 seedkey[], int round) //���ܺ����
 	fclose(fp);
 }
 
-u16 func1(u16 seedkey[], int count)
+//第一轮方法1
+u16 round1_func1(u16 seedkey[], int count)
 {
 	srand((unsigned)time(NULL));
 	u16 pt[2] = {0x0000, 0x0000};
@@ -132,7 +133,9 @@ u16 func1(u16 seedkey[], int count)
 	}
 	return Rk0;
 }
-u16 func2(u16 seedkey[])
+
+//第一轮方法2
+u16 round1_func2(u16 seedkey[])
 {
 
 	srand((unsigned)time(NULL));
@@ -160,4 +163,53 @@ u16 func2(u16 seedkey[])
 		}
 	}
 	return Rk0;
+}
+
+u16 round2_func(u16 seedkey[])
+{
+	u16 pt[2];
+	u16 ct[2];
+
+	u16 pt_[2];
+	u16 ct_[2];
+
+	u16 x = 0x2000;
+	u16 y = 0x2841;
+	int Rk_num[65536] = {0};
+	u16 ans = 0;
+	int max = 0;
+	for (int i = 0; i <= 10; i++)
+	{
+		pt[0] = 0;
+		pt[1] = i;
+
+		pt_[0] = pt[0] ^ x;
+		pt_[1] = i;
+
+		Enc(pt, ct, seedkey, 2);
+		Enc(pt_, ct_, seedkey, 2);
+
+		for (int j = 0; j < 65536; j++)
+		{
+			u16 ct2[2];
+			ct2[0] = ct[0];
+			ct2[1] = ct[1];
+			u16 ct2_[2];
+			ct2_[0] = ct_[0];
+			ct2_[1] = ct_[1];
+			u16 roundkey[] = {0x0000, j};
+			RoundFun(ct2, roundkey, 1);
+			RoundFun(ct2_, roundkey, 1);
+			if ((ct2[0] ^ ct2_[0]) == y)
+			{
+				Rk_num[j]++;
+			}
+			if (Rk_num[j] > max)
+			{
+				max = Rk_num[j];
+				ans = j;
+			}
+		}
+	}
+	return ans;
 }

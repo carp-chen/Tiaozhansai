@@ -1,12 +1,12 @@
 /***********************************************************
-全国高校密码挑战赛：分组密码密钥恢复问题
-J算法测试向量
-代码修改时间：2022-4-14
+全锟斤拷锟斤拷校锟斤拷锟斤拷锟斤拷战锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷钥锟街革拷锟斤拷锟斤拷
+J锟姐法锟斤拷锟斤拷锟斤拷锟斤拷
+锟斤拷锟斤拷锟睫革拷时锟戒：2022-4-14
 ************************************************************/
 /***********************************************************
-注：算法实现以16比特为基本数据单元（u16）;
-明文、密文为2个u16构成的数组pt[2]，ct[2]，其中左支为Arr[0],右支为Arr[1];
-种子密钥为4个u16构成的数组seedkey[4]，其中seedkey[i]=K[i],0<=i<=3.
+注锟斤拷锟姐法实锟斤拷锟斤拷16锟斤拷锟斤拷为锟斤拷锟斤拷锟斤拷锟捷碉拷元锟斤拷u16锟斤拷;
+锟斤拷锟侥★拷锟斤拷锟斤拷为2锟斤拷u16锟斤拷锟缴碉拷锟斤拷锟斤拷pt[2]锟斤拷ct[2]锟斤拷锟斤拷锟斤拷锟斤拷支为Arr[0],锟斤拷支为Arr[1];
+锟斤拷锟斤拷锟斤拷钥为4锟斤拷u16锟斤拷锟缴碉拷锟斤拷锟斤拷seedkey[4]锟斤拷锟斤拷锟斤拷seedkey[i]=K[i],0<=i<=3.
 *************************************************************/
 #include "Tiaozhansai2022.h"
 
@@ -15,8 +15,8 @@ int main(void)
 	u16 seedkey[4];
 	u16 pt[2], ct[2];
 
-	pt[0] = 2;
-	pt[1] = 1;
+	pt[0] = 0x2002;
+	pt[1] = 3;
 	// seedkey=0xfedcba9876543210
 	seedkey[0] = 0x3210;
 	seedkey[1] = 0x7654;
@@ -27,18 +27,25 @@ int main(void)
 	// u16 Rk0;
 	// printf("Rk0:%04x\n", Rk0);
 
-	// Rk0 = func1(seedkey, count);
+	// Rk0 = round1_func1(seedkey, count);
 	// printf("func1-Rk0:0x%04x\n", Rk0);
 
-	// Rk0 = func2(seedkey);
+	// Rk0 = round1_func2(seedkey);
 	// printf("func2-Rk0:0x%04x\n", Rk0);
 
-	Enc(pt, ct, seedkey, 1);
+	Enc(pt, ct, seedkey, 2);
 	printf("ct = %.4x %.4x\n", ct[0], ct[1]);
 
-	Enc(ct, pt, seedkey, 1);
-	printf("pt = %.4x %.4x\n", pt[0], pt[1]);
+	u16 rounkey[] = {0x0000, 0xcdef};
 
-	system("pause");
+	RoundFun(ct, rounkey, 1);
+	printf("pt = %.4x %.4x\n", ct[0], ct[1]);
+
+	// u16 x = 0xce3b ^ 0xe67a;
+	// printf("x:%04x\n", x);
+
+	u16 Rk1 = round2_func(seedkey);
+	printf("Rk1:%04x\n", Rk1);
+	// system("pause");
 	return 0;
 }
