@@ -173,12 +173,25 @@ u16 round2_func(u16 seedkey[])
 	u16 pt_[2];
 	u16 ct_[2];
 
-	u16 x = 0x2000;
-	u16 y = 0x2841;
+	u16 x = 0x2111;
+
+	pt[0] = 0x0000;
+	pt[1] = 0;
+	pt_[0] = pt[0] ^ x;
+	pt_[1] = 0;
+
+	Enc(pt, ct, seedkey, 1);
+	Enc(pt_, ct_, seedkey, 1);
+
+	u16 y = ct[0] ^ ct_[0];
+	printf("y:%04x\n", y);
+
+	// u16 x = 0x2000;
+	// u16 y = 0x2841;
 	int Rk_num[65536] = {0};
 	u16 ans = 0;
 	int max = 0;
-	for (int i = 0; i <= 10; i++)
+	for (int i = 0; i <= 100; i++)
 	{
 		pt[0] = 0;
 		pt[1] = i;
@@ -201,6 +214,128 @@ u16 round2_func(u16 seedkey[])
 			RoundFun(ct2, roundkey, 1);
 			RoundFun(ct2_, roundkey, 1);
 			if ((ct2[0] ^ ct2_[0]) == y)
+			{
+				Rk_num[j]++;
+			}
+			if (Rk_num[j] > max)
+			{
+				max = Rk_num[j];
+				ans = j;
+			}
+		}
+	}
+	return ans;
+}
+
+u16 round3_func(u16 seedkey[])
+{
+
+	u16 pt[2];
+	u16 ct[2];
+
+	u16 pt_[2];
+	u16 ct_[2];
+
+	u16 x = 0x2111;
+
+	pt[0] = 0x0000;
+	pt[1] = 0;
+	pt_[0] = pt[0] ^ x;
+	pt_[1] = 0;
+
+	Enc(pt, ct, seedkey, 2);
+	Enc(pt_, ct_, seedkey, 2);
+
+	u16 y_0 = ct[0] ^ ct_[0];
+	u16 y_1 = ct[1] ^ ct_[1];
+
+	int Rk_num[65536] = {0};
+	u16 ans = 0;
+	int max = 0;
+	for (int i = 0; i <= 1000; i++)
+	{
+		pt[0] = 0;
+		pt[1] = i;
+
+		pt_[0] = pt[0] ^ x;
+		pt_[1] = i;
+
+		Enc(pt, ct, seedkey, 3);
+		Enc(pt_, ct_, seedkey, 3);
+
+		for (int j = 0; j < 65536; j++)
+		{
+			u16 ct2[2];
+			ct2[0] = ct[0];
+			ct2[1] = ct[1];
+			u16 ct2_[2];
+			ct2_[0] = ct_[0];
+			ct2_[1] = ct_[1];
+			u16 roundkey[] = {0x0000, 0x0000, j};
+			RoundFun(ct2, roundkey, 2);
+			RoundFun(ct2_, roundkey, 2);
+			if ((ct2[0] ^ ct2_[0]) == y_0 && (ct2[1] ^ ct2_[1]) == y_1)
+			{
+				Rk_num[j]++;
+			}
+			if (Rk_num[j] > max)
+			{
+				max = Rk_num[j];
+				ans = j;
+			}
+		}
+	}
+	return ans;
+}
+
+u16 round4_func(u16 seedkey[])
+{
+
+	u16 pt[2];
+	u16 ct[2];
+
+	u16 pt_[2];
+	u16 ct_[2];
+
+	u16 x = 0x2111;
+
+	pt[0] = 0x0000;
+	pt[1] = 0;
+	pt_[0] = pt[0] ^ x;
+	pt_[1] = 0;
+
+	Enc(pt, ct, seedkey, 2);
+	Enc(pt_, ct_, seedkey, 2);
+
+	u16 y_0 = ct[0] ^ ct_[0];
+	u16 y_1 = ct[1] ^ ct_[1];
+
+	int Rk_num[65536] = {0};
+	u16 ans = 0;
+	int max = 0;
+	for (int i = 0; i <= 1000; i++)
+	{
+		pt[0] = 0;
+		pt[1] = i;
+
+		pt_[0] = pt[0] ^ x;
+		pt_[1] = i;
+
+		Enc(pt, ct, seedkey, 3);
+		Enc(pt_, ct_, seedkey, 3);
+
+		for (int j = 0; j < 65536; j++)
+		{
+			u16 ct2[2];
+			ct2[0] = ct[0];
+			ct2[1] = ct[1];
+			u16 ct2_[2];
+			ct2_[0] = ct_[0];
+			ct2_[1] = ct_[1];
+			u16 roundkey[] = {0x0000, 0x0000, j};
+			RoundFun(ct2, roundkey, 2);
+			RoundFun(ct2_, roundkey, 2);
+			if ((ct2[0] ^ ct2_[0]) == y_0 && (ct2[1] ^ ct2_[1]) == y_1)
 			{
 				Rk_num[j]++;
 			}

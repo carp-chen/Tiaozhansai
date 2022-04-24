@@ -18,31 +18,18 @@ int main(void)
 	pt[0] = 0x2002;
 	pt[1] = 3;
 	// seedkey=0xfedcba9876543210
-	seedkey[0] = 0x3210;
-	seedkey[1] = 0x7654;
+	seedkey[0] = 0x1234;
+	seedkey[1] = 0x1234;
 	seedkey[2] = 0xba98;
 	seedkey[3] = 0xfedc;
 
-	// int count = 100;
-	// u16 Rk0;
-	// printf("Rk0:%04x\n", Rk0);
+	// Enc(pt, ct, seedkey, 3);
+	// printf("ct = %.4x %.4x\n", ct[0], ct[1]);
 
-	// Rk0 = round1_func1(seedkey, count);
-	// printf("func1-Rk0:0x%04x\n", Rk0);
+	// u16 rounkey[] = {0x0000, 0x0000, 0x7654};
 
-	// Rk0 = round1_func2(seedkey);
-	// printf("func2-Rk0:0x%04x\n", Rk0);
-
-	Enc(pt, ct, seedkey, 2);
-	printf("ct = %.4x %.4x\n", ct[0], ct[1]);
-
-	u16 rounkey[] = {0x0000, 0xcdef};
-
-	RoundFun(ct, rounkey, 1);
-	printf("pt = %.4x %.4x\n", ct[0], ct[1]);
-
-	// u16 x = 0xce3b ^ 0xe67a;
-	// printf("x:%04x\n", x);
+	// RoundFun(ct, rounkey, 2);
+	// printf("pt = %.4x %.4x\n", ct[0], ct[1]);
 
 	u16 Rk1 = round2_func(seedkey);
 	printf("Rk1:%04x\n", Rk1);
